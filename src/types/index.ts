@@ -1,39 +1,42 @@
-interface Card {
+export interface ICard {
 	id: string;
 	description: string;
 	image: string;
 	title: string;
 	category: string;
 	price: number | null;
-} 
+}
 
-interface CardList {
-	cards: Card[];
+export interface ICardList {
+	cards: ICard[];
 	total: number;
-} 
+}
 
-interface Modal {
-	closeModalButton: HTMLButtonElement;
-	modalContent: HTMLElement;
-	changeModalButton: HTMLButtonElement;
-} 
-
-interface Basket {
-	items: HTMLElement[];
-    total: number;
-} 
-
-interface User {
-	adress: string;
+export interface IOrderContact {
 	email: string;
-	phone: number;
-} 
+	phone: string;
+}
 
-interface OrderPayment {
-	payType: 'online' | 'cash';
-} 
+export interface IOrderPayment {
+	payment: 'online' | 'cash';
+	address: string;
+}
 
-interface IOrderResult {
+export interface IOrder extends IOrderContact, IOrderPayment {
+	total: number;
+	items: string[];
+}
+
+export interface IOrderResult {
 	id: string;
 	total: number;
-} 
+}
+
+export type FormErrors = Partial<Record<keyof IOrder, string>>;
+
+export interface IAppState {
+    catalog: ICard[];
+    basket: string[];
+    preview: string | null;
+    order: IOrder | null;
+}
