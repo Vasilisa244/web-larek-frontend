@@ -1,3 +1,11 @@
+export enum Category {
+	'софт-скил',
+	'другое',
+	'дополнительное',
+	'кнопка',
+	'хард-скил',
+}
+
 export interface ICard {
 	id: string;
 	description: string;
@@ -12,17 +20,14 @@ export interface ICardList {
 	total: number;
 }
 
-export interface IOrderContact {
+export interface IOrderForm {
 	email: string;
 	phone: string;
-}
-
-export interface IOrderPayment {
-	payment: 'online' | 'cash';
+	payment: string;
 	address: string;
 }
 
-export interface IOrder extends IOrderContact, IOrderPayment {
+export interface IOrder extends IOrderForm {
 	total: number;
 	items: string[];
 }
@@ -35,8 +40,13 @@ export interface IOrderResult {
 export type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 export interface IAppState {
-    catalog: ICard[];
-    basket: string[];
-    preview: string | null;
-    order: IOrder | null;
+	catalog: ICard[];
+	basket: string[];
+	preview: string | null;
+	order: IOrder | null;
 }
+
+export type ApiListResponse<Type> = {
+	total: number;
+	items: Type[];
+};
