@@ -60,8 +60,8 @@ export class OrderPayment extends Form<IOrderForm> {
 		this.toggleClass(this._cashButton, 'button_alt-active', false);
 	}
 
-	set adress(value: string) {
-		(this.container.elements.namedItem('adress') as HTMLInputElement).value =
+	set address(value: string) {
+		(this.container.elements.namedItem('address') as HTMLInputElement).value =
 			value;
 	}
 }

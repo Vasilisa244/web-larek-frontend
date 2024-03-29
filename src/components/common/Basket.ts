@@ -26,7 +26,7 @@ export class Basket extends Component<IBasketView> {
 			});
 		}
 		this.items = [];
-		this.selected = 0;
+		this.total = 0;
 	}
 
 	set items(items: HTMLElement[]) {

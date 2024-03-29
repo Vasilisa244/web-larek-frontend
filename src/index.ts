@@ -111,8 +111,34 @@ events.on('basket:open', () => {
 	});
 });
 
+// изменились товары в корзине
+events.on('larek:changed', () => {
+	page.counter = appData.itemCount();
+	basket.total = appData.getTotal();
+	basket.items = appData.getSelectedItems().map((item, index) => {
+		const card = new BasketItem(cloneTemplate(cardBasketTemplate), {
+			onClick: () => {
+				appData.toggleOrderedCard(item.id, false);
+				page.counter = appData.itemCount();
+				basket.total = appData.getTotal();
+				basket.selected = appData.getTotal();
+				appData.order.total = appData.getTotal();
+				events.emit('larek:changed');
+			},
+		});
+		card.setIndex(index + 1);
+		appData.order.total = appData.getTotal();
+		basket.selected = appData.getTotal();
+		return card.render({
+			title: item.title,
+			price: item.price,
+		});
+	});
+});
+
 // Открыть форму оплпты
 events.on('order:open', () => {
+	orderPayment.cancelPayment();
 	modal.render({
 		content: orderPayment.render({
 			address: '',
@@ -147,8 +173,8 @@ events.on('contacts:submit', () => {
 					basket.selected = appData.getTotal();
 				},
 			});
-			events.emit('larek:changed');
 			appData.clearBasket();
+			events.emit('larek:changed');
 			basket.selected = appData.getTotal();
 			modal.render({
 				content: success.render({ total: result.total }),
@@ -158,6 +184,22 @@ events.on('contacts:submit', () => {
 			console.error(err);
 		});
 });
+
+// Изменилось одно из полей
+events.on(
+	/^order\..*:change/,
+	(data: { field: keyof IOrderForm; value: string }) => {
+		appData.setOrderField(data.field, data.value);
+	}
+);
+
+//изменилось один из контактов
+events.on(
+	/^contacts\..*:change/,
+	(data: { field: keyof IOrderForm; value: string }) => {
+		appData.setOrderField(data.field, data.value);
+	}
+);
 
 // Изменилось состояние валидации формы
 events.on('formErrors:change', (errors: Partial<IOrderForm>) => {
@@ -177,22 +219,6 @@ events.on('formErrors:change', (errors: Partial<IOrderForm>) => {
 		.join('; ');
 });
 
-// Изменилось одно из полей
-events.on(
-	/^order\..*:change/,
-	(data: { field: keyof IOrderForm; value: string }) => {
-		appData.setOrderField(data.field, data.value);
-	}
-);
-
-//изменилось один из контактов
-events.on(
-	/^contacts\..*:change/,
-	(data: { field: keyof IOrderForm; value: string }) => {
-		appData.setOrderField(data.field, data.value);
-	}
-);
-
 // Переключение вида оплаты товара
 events.on(
 	'order:change payment',
@@ -202,32 +228,6 @@ events.on(
 		appData.validateOrder();
 	}
 );
-
-// обновление корзины
-events.on('larek:changed', () => {
-	page.counter = appData.itemCount();
-	basket.total = appData.getTotal();
-	basket.items = appData.getSelectedItems().map((item, index) => {
-		const card = new BasketItem(cloneTemplate(cardBasketTemplate), {
-			onClick: () => {
-				appData.toggleOrderedCard(item.id, false);
-				page.counter = appData.itemCount();
-				basket.total = appData.getTotal();
-				basket.selected = appData.getTotal();
-				appData.total = appData.getTotal();
-
-				events.emit('larek:changed');
-			},
-		});
-		card.setIndex(index + 1);
-		appData.total = appData.getTotal();
-		basket.selected = appData.getTotal();
-		return card.render({
-			title: item.title,
-			price: item.price,
-		});
-	});
-});
 
 // Блокируем прокрутку страницы если открыта модалка
 events.on('modal:open', () => {

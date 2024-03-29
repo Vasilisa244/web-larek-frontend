@@ -1,13 +1,7 @@
 import { Component } from './base/Component';
 import { ICard } from '../types';
 import { ensureElement } from '../utils/utils';
-const categoryMap = new Map([
-	['софт-скил', 'card__category_soft'],
-	['дополнительное', 'card__category_additional'],
-	['кнопка', 'card__category_button'],
-	['хард-скил', 'card__category_hard'],
-	['другое', 'card__category_other'],
-]);
+import { categoryMap } from '../utils/constants';
 
 interface ICardActions {
 	onClick: (event: MouseEvent) => void;
@@ -77,6 +71,7 @@ export class Card extends Component<ICard> {
 	set price(value: number | null) {
 		if (value === null) {
 			this.setText(this._price, `Бесценно`);
+			this.setDisabled(this._button, true);
 		} else {
 			this.setText(this._price, `${value} синапсов`);
 		}

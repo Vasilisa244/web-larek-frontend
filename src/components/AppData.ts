@@ -33,9 +33,16 @@ export class AppState extends Model<IAppState> {
 	}
 
 	clearBasket() {
-		this.order.items.forEach((id) => {
-			this.toggleOrderedCard(id, false);
-		});
+		this.order = {
+			email: '',
+			phone: '',
+			payment: '',
+			address: '',
+			total: 0,
+			items: [],
+		};
+		this.basket = [];
+		this.emitChanges('basket:changed');
 	}
 
 	itemCount(): number {
@@ -51,10 +58,6 @@ export class AppState extends Model<IAppState> {
 			(a, c) => a + this.catalog.find((it) => it.id === c).price,
 			0
 		);
-	}
-
-	set total(total: number) {
-		this.order.total = total;
 	}
 
 	setCatalog(items: ICard[]) {

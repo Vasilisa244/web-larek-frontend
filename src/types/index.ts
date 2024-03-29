@@ -1,11 +1,3 @@
-export enum Category {
-	'софт-скил',
-	'другое',
-	'дополнительное',
-	'кнопка',
-	'хард-скил',
-}
-
 export interface ICard {
 	id: string;
 	description: string;
@@ -13,11 +5,6 @@ export interface ICard {
 	title: string;
 	category: string;
 	price: number | null;
-}
-
-export interface ICardList {
-	cards: ICard[];
-	total: number;
 }
 
 export interface IOrderForm {
